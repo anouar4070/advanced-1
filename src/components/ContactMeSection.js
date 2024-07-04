@@ -17,7 +17,7 @@ import FullScreenSection from "./FullScreenSection";
 import useSubmit from "../hooks/useSubmit";
 import { useAlertContext } from "../context/alertContext";
 
-const ContactMeSection = () => {
+const LandingSection = () => {
   const { isLoading, response, submit } = useSubmit();
   const { onOpen } = useAlertContext();
 
@@ -25,31 +25,38 @@ const ContactMeSection = () => {
     initialValues: {
       firstName: "",
       email: "",
-      type: "",
+      type: "hireMe",
       comment: "",
     },
+
+    // onSubmit: (values) => {
+    //   submit({ ...values, email: "g.anouar@yahoo.com" });
+    // },
+
+    //  onSubmit: (values) => {submit('https://john.com/contactme', values)},
+
     onSubmit: (values) => {
-      submit(values); // Use submit function from useSubmit hook
+      submit(values);
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("First Name is required"),
-      email: Yup.string().email("Invalid email format").required("Email is required"),
-      type: Yup.string().required("Please select an enquiry type"),
-      comment: Yup.string().required("Please enter your message"),
+      firstName: Yup.string().required("Required"),
+      email: Yup.string().email("Invalid email address").required("Required"),
+      comment: Yup.string()
+        .min(25, "Must be at least 25 characters")
+        .required("Required"),
     }),
   });
 
+  // e) **Show an alert when the form is submitted successfully**.
+
   useEffect(() => {
     if (response) {
+      onOpen(response.type, response.message);
       if (response.type === "success") {
-        onOpen({
-          message: `Your message has been sent successfully, ${formik.values.firstName}!`,
-          type: "success",
-        });
-        formik.resetForm(); // Reset form on successful submission
+        formik.resetForm();
       }
     }
-  }, [response, onOpen, formik]);
+  }, [response]);
 
   return (
     <FullScreenSection
@@ -65,62 +72,55 @@ const ContactMeSection = () => {
         <Box p={6} rounded="md" w="100%">
           <form onSubmit={formik.handleSubmit}>
             <VStack spacing={4}>
-              <FormControl isInvalid={formik.errors.firstName && formik.touched.firstName}>
-                <FormLabel htmlFor="firstName">First Name</FormLabel>
+              <FormControl
+                isInvalid={
+                  !!formik.errors.firstName && formik.touched.firstName
+                }
+              >
+                <FormLabel htmlFor="firstName">Name</FormLabel>
                 <Input
                   id="firstName"
                   name="firstName"
-                  type="text"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.firstName}
+                  {...formik.getFieldProps("firstName")}
                 />
                 <FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
               </FormControl>
-
-              <FormControl isInvalid={formik.errors.email && formik.touched.email}>
-                <FormLabel htmlFor="email">Email</FormLabel>
+              <FormControl
+                isInvalid={!!formik.errors.email && formik.touched.email}
+              >
+                <FormLabel htmlFor="email">Email Address</FormLabel>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.email}
+                  {...formik.getFieldProps("email")}
                 />
                 <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
               </FormControl>
-
-              <FormControl isInvalid={formik.errors.type && formik.touched.type}>
-                <FormLabel htmlFor="type">Type</FormLabel>
-                <Select
-                  id="type"
-                  name="type"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.type}
-                >
-                  <option value="" label="Select type" />
-                  <option value="general" label="General" />
-                  <option value="feedback" label="Feedback" />
-                  <option value="other" label="Other" />
+              <FormControl>
+                <FormLabel htmlFor="type">Type of enquiry</FormLabel>
+                <Select id="type" name="type" {...formik.getFieldProps("type")}>
+                  <option value="hireMe">Freelance project proposal</option>
+                  <option value="openSource">
+                    Open source consultancy session
+                  </option>
+                  <option value="other">Other</option>
                 </Select>
-                <FormErrorMessage>{formik.errors.type}</FormErrorMessage>
               </FormControl>
-
-              <FormControl isInvalid={formik.errors.comment && formik.touched.comment}>
-                <FormLabel htmlFor="comment">Comment</FormLabel>
+              <FormControl
+                isInvalid={!!formik.errors.comment && formik.touched.comment}
+              >
+                <FormLabel htmlFor="comment">Your message</FormLabel>
                 <Textarea
                   id="comment"
                   name="comment"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.comment}
+                  height={250}
+                  {...formik.getFieldProps("comment")}
                 />
                 <FormErrorMessage>{formik.errors.comment}</FormErrorMessage>
               </FormControl>
-
-              <Button type="submit" colorScheme="purple" width="full" isLoading={isLoading}>
+              <Button type="submit" colorScheme="purple" width="full">
+                {/* <Button type="submit" colorScheme="purple" width="full"  isLoading={isLoading}> */}
                 Submit
               </Button>
             </VStack>
@@ -131,4 +131,4 @@ const ContactMeSection = () => {
   );
 };
 
-export default ContactMeSection;
+export default LandingSection;
