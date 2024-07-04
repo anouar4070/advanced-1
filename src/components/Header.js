@@ -1,18 +1,26 @@
-import React, { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub, faLinkedin, faMedium, faStackOverflow } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-
-import { Box, HStack, Link } from "@chakra-ui/react";
+import {
+  faBriefcase,
+  faEnvelope,
+  faHome,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  faGithub,
+  faLinkedin,
+  faMedium,
+  faStackOverflow,
+} from "@fortawesome/free-brands-svg-icons";
+import { Box, HStack, Text } from "@chakra-ui/react";
 
 const socials = [
   {
     icon: faEnvelope,
-    url: "mailto: g.anouar@yahoo.com",
+    url: "mailto: hello@example.com",
   },
   {
     icon: faGithub,
-    url: "https://github.com/anouar4070",
+    url: "https://github.com",
   },
   {
     icon: faLinkedin,
@@ -20,11 +28,11 @@ const socials = [
   },
   {
     icon: faMedium,
-    url: "https://medium.com/@g.anouar",
+    url: "https://medium.com",
   },
   {
     icon: faStackOverflow,
-    url: "https://stackoverflow.com/users/23590196/anouar4070",
+    url: "https://stackoverflow.com",
   },
 ];
 
@@ -40,38 +48,92 @@ const Header = () => {
     }
   };
 
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const prevScrollY = useRef(0);
+
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+
+    if (Math.abs(currentScrollY - prevScrollY.current) < 10) {
+      return;
+    }
+
+    if (currentScrollY > prevScrollY.current) {
+      setIsHeaderVisible(false);
+    } else {
+      setIsHeaderVisible(true);
+    }
+
+    prevScrollY.current = currentScrollY;
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <Box
-    zIndex = {2}
+      zIndex={2}
       position="fixed"
       top={0}
       left={0}
       right={0}
-      translateY={0}
-      transitionProperty="transform"
-      transitionDuration=".3s"
-      transitionTimingFunction="ease-in-out"
-      backgroundColor="#18181b"
+      translateY={isHeaderVisible ? 0 : "-100%"}
+      opacity={isHeaderVisible ? 1 : 0}
+      transition="translateY 0.5s ease-in-out, opacity 0.5s ease-in-out"
+      backgroundColor={!isHeaderVisible ? "transparent" : "#18181b"}
     >
       <Box color="white" maxWidth="1280px" margin="0 auto">
-        <HStack px={16} py={4} justifyContent="space-between" alignItems="center">
+        <HStack
+          px={16}
+          py={4}
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <nav>
-            <HStack spacing={4}> {/* Add spacing between social links */}
+            {/* Add social media links based on the `socials` data */}
+            <HStack
+              spacing={8}
+              color={!isHeaderVisible ? "transparent" : "##FFFFFF"}
+            >
               {socials.map((social) => (
-                <Link key={social.icon} href={social.url} isExternal>
+                <a href={social.url} key={social.url}>
                   <FontAwesomeIcon icon={social.icon} size="2x" />
-                </Link>
+                </a>
               ))}
             </HStack>
           </nav>
           <nav>
-            <HStack spacing={8}>
-              <Link onClick={handleClick("projects")} href="#projects-section">
-                Projects
-              </Link>
-              <Link onClick={handleClick("contactme")} href="#contactme-section">
-                Contact Me
-              </Link>
+            <HStack
+              spacing={8}
+              color={!isHeaderVisible ? "transparent" : "##FFFFFF"}
+            >
+              {/* Add links to Projects and Contact me section */}
+              <a href="/#" onClick={handleClick("landing")}>
+                <HStack>
+                  <FontAwesomeIcon icon={faHome} size="lg" />
+                  <Text fontSize={14} fontWeight="bold">
+                    Home
+                  </Text>
+                </HStack>
+              </a>
+              <a href="#project-section" onClick={handleClick("projects")}>
+                <HStack>
+                  <FontAwesomeIcon icon={faBriefcase} size="lg" />
+                  <Text fontSize={14} fontWeight="bold">
+                    Projects
+                  </Text>
+                </HStack>
+              </a>
+              <a href="#contactme-section" onClick={handleClick("contactme")}>
+                <HStack>
+                  <FontAwesomeIcon icon={faEnvelope} size="lg" />
+                  <Text fontSize={14} fontWeight="bold">
+                    Contact Me
+                  </Text>
+                </HStack>
+              </a>
             </HStack>
           </nav>
         </HStack>
@@ -79,5 +141,4 @@ const Header = () => {
     </Box>
   );
 };
-
 export default Header;

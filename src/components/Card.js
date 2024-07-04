@@ -18,9 +18,10 @@ const Card = ({ title, description, imageSrc }) => {
       borderRadius="md"
       boxShadow="md" 
       width="100%"
-      p={4}
+      p={0}
     >
       <Image src={imageSrc} alt={title} borderRadius="md" />
+      <Box p={5}>
       <VStack spacing={2}>
         <Heading size="md" color="black">
           {title}
@@ -35,6 +36,7 @@ const Card = ({ title, description, imageSrc }) => {
           <FontAwesomeIcon icon={faArrowRight} />
         </Text>
       </HStack>
+      </Box>
     </Box>
   );
 };
