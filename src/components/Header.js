@@ -8,11 +8,11 @@ import { Box, HStack, Link } from "@chakra-ui/react";
 const socials = [
   {
     icon: faEnvelope,
-    url: "mailto: hello@example.com",
+    url: "mailto: g.anouar@yahoo.com",
   },
   {
     icon: faGithub,
-    url: "https://github.com",
+    url: "https://github.com/anouar4070",
   },
   {
     icon: faLinkedin,
@@ -20,11 +20,11 @@ const socials = [
   },
   {
     icon: faMedium,
-    url: "https://medium.com",
+    url: "https://medium.com/@g.anouar",
   },
   {
     icon: faStackOverflow,
-    url: "https://stackoverflow.com",
+    url: "https://stackoverflow.com/users/23590196/anouar4070",
   },
 ];
 
