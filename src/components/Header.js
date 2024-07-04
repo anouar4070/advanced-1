@@ -42,6 +42,7 @@ const Header = () => {
 
   return (
     <Box
+    zIndex = {2}
       position="fixed"
       top={0}
       left={0}
