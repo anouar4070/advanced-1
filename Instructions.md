@@ -196,5 +196,5 @@ Here are some of the elements you may need for the implementation:
 - Removing listeners for the scroll event: `window.removeEventListener('scroll', handleScroll)`
 - Keeping track of the previous scroll position in a variable
 
-![](screenshots/header_animation.gif)
+
 
